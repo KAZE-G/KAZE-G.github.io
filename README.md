@@ -1,1 +1,1 @@
-# KAZE-G.github.io
+access by [yamamachi.com](https://www.yamamachi.com)
