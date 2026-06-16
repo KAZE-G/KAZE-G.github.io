@@ -46,6 +46,8 @@
         let score = intercept;
         for (let i = 0; i < vector.length; i++) {
             score += vector[i] * idf[i] * coef[i];
+            console.log("計算出的總分 (Score):", score);
+            console.log("向量命中次數:", vector.reduce((a, b) => a + b, 0));
         }
         
         const prob = 1 / (1 + Math.exp(-score));
