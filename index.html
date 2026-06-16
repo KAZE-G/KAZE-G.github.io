@@ -27,45 +27,31 @@
         .then(data => { modelParams = data; });
 
     function handlePredict() {
-    const text = document.getElementById('userInput').value;
-    const vocab = modelParams.vocab;
-    const idf = modelParams.idf;
-    const coef = modelParams.coef[0];
-    const intercept = modelParams.intercept[0];
-    
-    // 1. 初始化一個與詞彙表一樣長的向量
-    let vector = new Array(Object.keys(vocab).length).fill(0);
-    
-    // 2. 填充向量
-    for (let i = 0; i < text.length; i++) {
-        for (let n = 1; n <= 3; n++) {
-            let gram = text.substring(i, i + n);
-            if (vocab.hasOwnProperty(gram)) {
-                vector[vocab[gram]] += 1;
+        const text = document.getElementById('userInput').value;
+        const vocab = modelParams.vocab;
+        const idf = modelParams.idf;
+        const coef = modelParams.coef[0];
+        const intercept = modelParams.intercept[0];
+        
+        let vector = new Array(Object.keys(vocab).length).fill(0);
+        for (let i = 0; i < text.length; i++) {
+            for (let n = 1; n <= 3; n++) {
+                let gram = text.substring(i, i + n);
+                if (vocab.hasOwnProperty(gram)) {
+                    vector[vocab[gram]] += 1;
+                }
             }
         }
-    }
-    
-    // 3. 計算 Score (這裡必須精準對齊)
-    let score = intercept;
-    for (let i = 0; i < vector.length; i++) {
-        // 這裡確保只有命中詞彙才參與乘法
-        if (vector[i] > 0) {
+        
+        let score = intercept;
+        for (let i = 0; i < vector.length; i++) {
             score += vector[i] * idf[i] * coef[i];
         }
-    }
-    
-    // 4. 計算機率
-    const prob = 1 / (1 + Math.exp(-score));
-    
-    // 5. 修改顯示邏輯 (改為顯示機率值，方便觀察)
-    const result = prob > 0.5 ? "【關西方言】" : "【非關西方言】";
-    
-    document.getElementById('resultOutput').innerText = 
-        `結果：${result} (關西機率: ${(prob * 100).toFixed(1)}%)`;
         
-    console.log("最終機率:", prob);
-}
+        const prob = 1 / (1 + Math.exp(-score));
+        const result = prob > 0.5 ? "【關西方言】" : "【非關西方言】";
+        document.getElementById('resultOutput').innerText = `辨識結果：${result} (信心指數: ${(prob > 0.5 ? prob : 1-prob).toFixed(2)})`;
+    }
 </script>
     
 </html>
