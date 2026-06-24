@@ -1,57 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="description" content="Yamamachi personal website">
+    <meta charset="UTF-8"> <meta name="description" content="Yamamachi personal website">
     <meta name="robots" content="index, follow">
-    <title>やままち　〜薫風霧雨と火山の街〜</title>
-    </head>
-    <body style="font-family: 'MS Mincho', 'PMingLiU', serif;", bgcolor="#c4b289", text="#cc701f">
-        <h1>やままち　〜薫風霧雨と火山の街〜</h1>
-            <p>吾輩は猫である。</p>
-            <p>名前はまだない。</p>
-            <p>通り過ぎし旅人の数は：
-            <img src="https://visitor-badge.laobi.icu/badge?page_id=yamamachi.home"></p>
-    </body>
+    <title>やままち 〜薫風霧雨と火山の街〜</title>
+</head>
+<body style="font-family: 'MS Mincho', 'PMingLiU', serif;" bgcolor="#c4b289" text="#cc701f">
+    <h1>やままち 〜薫風霧雨と火山の街〜</h1>
+    <p>吾輩は猫である。</p>
+    <p>名前はまだない。</p>
+    <p>通り過ぎし旅人の数は：
+    <img src="https://visitor-badge.laobi.icu/badge?page_id=yamamachi.home"></p>
 
-    <div id="dialect-tool" style="background-color: #dccba8; border: 2px solid #cc701f; padding: 15px; margin: 20px; border-radius: 8px; color: #5c3b17;">
-    <h3 style="margin-top: 0;">方言辨識工具</h3>
-    <input type="text" id="userInput" placeholder="輸入一句日文..." style="width: 70%; padding: 5px;">
-    <button onclick="handlePredict()" style="cursor: pointer;">判斷腔調</button>
-    <div id="resultOutput" style="margin-top: 10px; font-weight: bold;"></div>
-</div>
-
-<script>
-    let modelParams = {};
-    fetch('model_weights.json')
-        .then(response => response.json())
-        .then(data => { modelParams = data; });
-
-    function handlePredict() {
-        const text = document.getElementById('userInput').value;
-        const vocab = modelParams.vocab;
-        const idf = modelParams.idf;
-        const coef = modelParams.coef[0];
-        const intercept = modelParams.intercept[0];
-        
-        let vector = new Array(Object.keys(vocab).length).fill(0);
-        for (let i = 0; i < text.length; i++) {
-            for (let n = 1; n <= 3; n++) {
-                let gram = text.substring(i, i + n);
-                if (vocab.hasOwnProperty(gram)) {
-                    vector[vocab[gram]] += 1;
-                }
-            }
-        }
-        
-        let score = intercept;
-        for (let i = 0; i < vector.length; i++) {
-            score += vector[i] * idf[i] * coef[i];
-        }
-        
-        const prob = 1 / (1 + Math.exp(-score));
-        const result = prob > 0.5 ? "【關西方言】" : "【非關西方言】";
-        document.getElementById('resultOutput').innerText = `辨識結果：${result} (信心指數: ${(prob > 0.5 ? prob : 1-prob).toFixed(2)})`;
-    }
-</script>
-    
+    <br>
+    <button onclick="window.location.href='dialect.html'">方言</button>
+</body>
 </html>
