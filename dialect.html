@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>方言辨識 - やままち</title>
+</head>
+<body style="font-family: 'MS Mincho', 'PMingLiU', serif;" bgcolor="#c4b289" text="#cc701f">
+    
+    <h2>方言辨識工具</h2>
+
+    <div style="background-color: #dccba8; border: 2px solid #cc701f; padding: 15px; width: 350px;">
+        <input type="text" id="userInput" placeholder="輸入一句日文..." style="width: 90%; padding: 5px; margin-bottom: 10px;">
+        <br>
+        <button onclick="checkDialect()">判斷腔調</button>
+        <div id="resultOutput" style="margin-top: 15px; font-weight: bold; color: #5c3b17;"></div>
+    </div>
+
+    <br>
+    <button onclick="window.location.href='index.html'">返回</button>
+
+    <script>
+        async function checkDialect() {
+            const text = document.getElementById("userInput").value;
+            const resultElement = document.getElementById("resultOutput");
+
+            if (!text) {
+                resultElement.innerText = "請先輸入文字！";
+                return;
+            }
+
+            resultElement.innerText = "分析中...";
+            resultElement.style.color = "#5c3b17";
+
+            try {
+                // 🚨 記得把下面的網址換成你 Render 部署後得到的真實 API 網址
+                // 例如: "https://kansai-api.onrender.com/predict"
+                const response = await fetch("http://127.0.0.1:8000/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                // 顯示我們在 Python API 中設定好的回傳訊息與信心指數
+                resultElement.innerText = `${data.message} (信心指數: ${data.confidence_percent}%)`;
+
+                // 針對關西腔稍微改變顏色以作區別
+                if (data.is_kansai) {
+                    resultElement.style.color = "#b03a2e"; // 暗紅色
+                } else {
+                    resultElement.style.color = "#5c3b17"; // 預設深咖啡色
+                }
+
+            } catch (error) {
+                console.error("連線錯誤:", error);
+                resultElement.innerText = "伺服器連線失敗，請確認 API 是否已啟動。";
+                resultElement.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
