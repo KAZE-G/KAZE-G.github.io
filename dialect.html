@@ -27,12 +27,12 @@
     <button onclick="window.location.href='index.html'">返回</button>
 
     <script>
-        const consent = document.getElementById("researchConsent").checked;
-        if (!consent) {
-            alert("請先勾選同意學術研究用途後方可使用。");
-            return;
-        }
         async function checkDialect() {
+            const consent = document.getElementById("researchConsent").checked;
+            if (!consent) {
+                alert("請先勾選同意學術研究用途後方可使用。");
+                return;
+            }
             const text = document.getElementById("userInput").value;
             const resultElement = document.getElementById("resultOutput");
 
