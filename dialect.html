@@ -6,9 +6,11 @@
 </head>
 <body style="font-family: 'MS Mincho', 'PMingLiU', serif;" bgcolor="#c4b289" text="#cc701f">
     
+<h style="color: red;">測試結束已失效</h>
+
     <h2>方言辨識工具</h2>
-    <p>本研究使用之資料由國立國語研究所『日本語諸方言コーパス (COJADS)』提供。僅供學術研究成果演示。</p>
-    <p>This research uses data from the Corpus of Japanese Dialects (COJADS) provided by NINJAL. Diplay of research only.</p>
+    <p><s>本研究使用之資料由國立國語研究所『日本語諸方言コーパス (COJADS)』提供。僅供學術研究成果演示。</s></p>
+    <p><s>This research uses data from the Corpus of Japanese Dialects (COJADS) provided by NINJAL. Diplay of research only.</s></p>
     
     <div style="margin-top: 10px;">
         <input type="checkbox" id="researchConsent"> 
@@ -45,9 +47,7 @@
             resultElement.style.color = "#5c3b17";
 
             try {
-                // 🚨 記得把下面的網址換成你 Render 部署後得到的真實 API 網址
-                // 例如: "https://kansai-api.onrender.com/predict"
-                const response = await fetch("https://nlp-is-it-kinki-api.onrender.com/predict", {
+                //const response = await fetch("https://nlp-is-it-kinki-api.onrender.com/predict", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
