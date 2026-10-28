@@ -6,8 +6,10 @@ h1, h2, h3 { font-weight: bold; }
 .album-cover { display: block; width: 150px; height: 150px; object-fit: contain; object-position: top left; border: 1px solid #352B1B; border-radius: 0; }
 .album-info { display: flex; align-items: flex-start; gap: 12px; }
 .album-description { flex: 1; min-width: 0; }
-.track-line { margin: 2px 0; }
-.track-line a { margin-right: 7px; }
+.track-list-wrap { max-width: 100%; overflow-x: auto; }
+.track-list { display: grid; grid-template-columns: max-content max-content max-content max-content max-content; width: max-content; min-width: 100%; align-items: baseline; column-gap: 0; }
+.track-list > * { margin: 2px 7px 2px 0; white-space: nowrap; }
+.track-duration { padding-left: 1em; }
 .small { font-size: 0.9em; }
 input, button, textarea, select { font: inherit; }
 textarea { max-width: 100%; }
