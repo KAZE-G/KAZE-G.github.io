@@ -3,7 +3,7 @@
     {
       "title": "山街から吹く風",
       "cover": "EP_01.jpg",
-      "dir": "/WORKS/EP01/",
+      "dir": "EP01",
       "tracks": [
         { "title": "気づいてたよ", "duration": "2:14", "file": "_01_気づいてたよ.mp3" },
         { "title": "にわいろ", "duration": "1:49", "file": "_02_にわいろ.mp3" },
