@@ -21,24 +21,32 @@ let playlist = [], currentIndex = -1, siteConfig = {};
 const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
+function addAssetVersion(path) {
+  if (!siteConfig.assetVersion || /[?&]v=/.test(path)) return path;
+  return path + (path.includes('?') ? '&' : '?') + 'v=' + encodeURIComponent(siteConfig.assetVersion);
+}
 function resolveAlbumFile(album, file) {
   if (!file) return '';
-  if (file.startsWith('/') || file.includes('://')) return file;
-  const rootPath = (siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
-  const folder = (album.dir || '').replace(/^\/+|\/+$/g, '');
-  const base = (album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath, folder].filter(Boolean).join('/');
-  return base + '/' + file;
+  if (file.includes('://') || file.startsWith('//')) return file;
+  let path = file;
+  if (!file.startsWith('/')) {
+    const rootPath = (siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
+    const folder = (album.dir || '').replace(/^\/+|\/+$/g, '');
+    const base = (album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath, folder].filter(Boolean).join('/');
+    path = base + '/' + file;
+  }
+  return addAssetVersion(path);
 }
 function resolveAudio(album, track) {
-  if (track.audio) return track.audio;
+  if (track.audio) return resolveAlbumFile(album, track.audio);
   if (track.file) return resolveAlbumFile(album, track.file);
   return '';
 }
 async function loadPlaylist() {
   try {
     const [response, configResponse] = await Promise.all([
-      fetch('works.json'),
-      fetch('site-config.json').catch(() => null)
+      fetch('works.json', {cache: 'no-cache'}),
+      fetch('site-config.json', {cache: 'no-cache'}).catch(() => null)
     ]);
     if (!response.ok) throw new Error('works.json unavailable');
     const data = await response.json();
