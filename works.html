@@ -6,22 +6,30 @@ const root = document.getElementById('works-list');
 let siteConfig = {};
 function addText(parent, tag, text, className) { const el=document.createElement(tag); el.textContent=text || ''; if(className) el.className=className; parent.appendChild(el); return el; }
 function addLink(parent, text, href) { const link=document.createElement('a'); link.href=href || '#'; link.textContent=text; parent.appendChild(link); return link; }
+function addAssetVersion(path) {
+ if(!siteConfig.assetVersion || /[?&]v=/.test(path)) return path;
+ return path + (path.includes('?') ? '&' : '?') + 'v=' + encodeURIComponent(siteConfig.assetVersion);
+}
 function resolveAlbumFile(album, file) {
  if(!file) return '';
- if(file.startsWith('/') || file.includes('://')) return file;
- const rootPath=(siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
- const folder=(album.dir || '').replace(/^\/+|\/+$/g, '');
- const base=(album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath,folder].filter(Boolean).join('/');
- return base + '/' + file;
+ if(file.includes('://') || file.startsWith('//')) return file;
+ let path=file;
+ if(!file.startsWith('/')) {
+  const rootPath=(siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
+  const folder=(album.dir || '').replace(/^\/+|\/+$/g, '');
+  const base=(album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath,folder].filter(Boolean).join('/');
+  path=base + '/' + file;
+ }
+ return addAssetVersion(path);
 }
 function resolveAudio(album, track) {
- if(track.audio) return track.audio;
- if(track.file) return resolveAlbumFile(album, track.file);
+ if(track.audio) return resolveAlbumFile(album,track.audio);
+ if(track.file) return resolveAlbumFile(album,track.file);
  return '';
 }
 Promise.all([
- fetch('works.json').then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }),
- fetch('site-config.json').then(response => response.ok ? response.json() : {}).catch(() => ({}))
+ fetch('works.json',{cache:'no-cache'}).then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }),
+ fetch('site-config.json',{cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
 ]).then(([data,config]) => {
  siteConfig=config || {};
  const albums=Array.isArray(data) ? data : (data.albums || []); root.replaceChildren();
