@@ -1,12 +1,20 @@
 {
-  "albums": [{
-    "title": "山街から吹く風",
-    "cover": "/ALBUM/EP01/ep_01.jpg",
-    "tracks": [{
-      "title": "気づいてたよ",
-      "duration": "2:14",
-      "lyrics": "/ALBUM/EP01/",
-      "audio": "/ALBUM/EP01/_01_気づいてたよ.mp3"
-    }]
-  }]
+  "albums": [
+    {
+      "title": "山街から吹く風",
+      "cover": "/ALBUM/EP01/EP_01.jpg",
+      "audioDir": "/ALBUM/EP01/",
+      "tracks": [
+        { "title": "気づいてたよ", "duration": "2:14", "file": "_01_気づいてたよ.mp3" },
+        { "title": "にわいろ", "duration": "1:49", "file": "_02_にわいろ.mp3" },
+        { "title": "海女の夢", "duration": "2:01", "file": "_03_海女の夢.mp3" },
+        { "title": "潮騒の市", "duration": "3:37", "file": "_04_潮騒の市.mp3" },
+        { "title": "雨が囁き", "duration": "2:23", "file": "_05_雨が囁き.mp3" },
+        { "title": "戦に涙", "duration": "2:47", "file": "_06_戦に涙.mp3" },
+        { "title": "出会うは火吹きの山", "duration": "1:30", "file": "_07_出会うは火吹きの山.mp3" },
+        { "title": "数字数え", "duration": "1:19", "file": "_08_数字数え.mp3" },
+        { "title": "曲名未設定", "duration": "0:27", "file": "_09_.mp3" }
+      ]
+    }
+  ]
 }
