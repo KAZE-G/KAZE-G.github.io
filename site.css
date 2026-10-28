@@ -7,9 +7,12 @@ h1, h2, h3 { font-weight: bold; }
 .album-info { display: flex; align-items: flex-start; gap: 12px; }
 .album-description { flex: 1; min-width: 0; }
 .track-list-wrap { max-width: 100%; overflow-x: auto; }
-.track-list { border-collapse: collapse; width: max-content; min-width: 100%; }
-.track-list td { padding: 2px 7px 2px 0; white-space: nowrap; }
+.track-list { border-collapse: collapse; width: max-content; }
+.track-list td { padding: 2px 0; white-space: nowrap; }
+.track-list .track-index { padding-right: 0.5em; }
+.track-list .track-name-cell { width: max-content; }
 .track-list .track-duration { padding-left: 1em; }
+.track-list td:nth-child(4), .track-list td:nth-child(5) { padding-left: 0.5em; }
 .small { font-size: 0.9em; }
 input, button, textarea, select { font: inherit; }
 textarea { max-width: 100%; }
