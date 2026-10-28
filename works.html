@@ -48,19 +48,24 @@ Promise.all([
   if(album.price) addText(description,'p','價格：'+album.price,'small');
   info.appendChild(description); box.appendChild(info);
   const listWrap=document.createElement('div'); listWrap.className='track-list-wrap';
-  const list=document.createElement('div'); list.className='track-list';
+  const list=document.createElement('table'); list.className='track-list';
+  const tbody=document.createElement('tbody');
   tracks.forEach(track => {
-   const index=document.createElement('span'); index.className='track-index'; index.textContent=track.trackNumber+'.'; list.appendChild(index);
+   const row=document.createElement('tr');
+   const index=document.createElement('td'); index.className='track-index'; index.textContent=track.trackNumber+'.'; row.appendChild(index);
+   const titleCell=document.createElement('td'); titleCell.className='track-name-cell';
    const titleLink=document.createElement('a'); titleLink.className='track-name'; titleLink.href=track.audio || track.lyrics || '#'; titleLink.textContent=track.title || '未命名曲目';
    titleLink.addEventListener('click',event => {
     if(track.audio) { event.preventDefault(); try { parent.frames['sidebar'].playTrack(track.audio,track.title,tracks); } catch(error) { window.open(track.audio,'_blank'); } }
     else event.preventDefault();
    });
-   list.appendChild(titleLink);
-   const duration=document.createElement('span'); duration.className='track-duration'; duration.textContent=track.duration || ''; list.appendChild(duration);
-   if(track.lyrics) addLink(list,'.txt',track.lyrics); else { const empty=document.createElement('span'); list.appendChild(empty); }
-   if(track.audio) addLink(list,'.mp3',track.audio); else { const empty=document.createElement('span'); list.appendChild(empty); }
+   titleCell.appendChild(titleLink); row.appendChild(titleCell);
+   const duration=document.createElement('td'); duration.className='track-duration'; duration.textContent=track.duration || ''; row.appendChild(duration);
+   const lyricsCell=document.createElement('td'); if(track.lyrics) addLink(lyricsCell,'.txt',track.lyrics); row.appendChild(lyricsCell);
+   const audioCell=document.createElement('td'); if(track.audio) addLink(audioCell,'.mp3',track.audio); row.appendChild(audioCell);
+   tbody.appendChild(row);
   });
+  list.appendChild(tbody);
   listWrap.appendChild(list); box.appendChild(listWrap); root.appendChild(box);
  });
 }).catch(() => { root.textContent='無法讀取 works.json，請確認作品資料檔存在。'; });
