@@ -60,7 +60,13 @@ function playTrack(src, trackTitle, albumTracks) {
   playlist = chosen.length ? chosen : playlist;
   currentIndex = playlist.findIndex(track => track.audio === src);
   const track = currentIndex >= 0 ? playlist[currentIndex] : {};
-  title.textContent = [track.albumTitle, [track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ')].filter(Boolean).join('\n');
+  title.replaceChildren();
+  const albumLine = document.createElement('div');
+  albumLine.textContent = track.albumTitle || '';
+  const trackLine = document.createElement('div');
+  trackLine.textContent = [track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ');
+  if (albumLine.textContent) title.appendChild(albumLine);
+  title.appendChild(trackLine);
   audio.src = src; status.textContent = '';
   audio.play().catch(() => { status.textContent = '請按播放器的播放鍵開始播放。'; });
 }
