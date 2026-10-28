@@ -7,11 +7,11 @@ h1, h2, h3 { font-weight: bold; }
 .album-info { display: flex; align-items: flex-start; gap: 12px; }
 .album-description { flex: 1; min-width: 0; }
 .track-list-wrap { max-width: 100%; overflow-x: auto; }
-.track-list { display: grid; grid-template-columns: max-content max-content max-content max-content max-content; width: max-content; min-width: 100%; align-items: baseline; column-gap: 0; }
-.track-list > * { margin: 2px 7px 2px 0; white-space: nowrap; }
-.track-duration { padding-left: 1em; }
+.track-list { border-collapse: collapse; width: max-content; min-width: 100%; }
+.track-list td { padding: 2px 7px 2px 0; white-space: nowrap; }
+.track-list .track-duration { padding-left: 1em; }
 .small { font-size: 0.9em; }
 input, button, textarea, select { font: inherit; }
 textarea { max-width: 100%; }
-#player-title { overflow-wrap: anywhere; }
+#player-title { overflow-wrap: anywhere; white-space: pre-line; }
 @media (max-width: 520px) { .album-info { flex-wrap: wrap; } .album-cover { width: 120px; height: 120px; } }
