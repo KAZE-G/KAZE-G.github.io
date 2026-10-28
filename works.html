@@ -5,9 +5,15 @@
 const root = document.getElementById('works-list');
 function addText(parent, tag, text, className) { const el=document.createElement(tag); el.textContent=text || ''; if(className) el.className=className; parent.appendChild(el); return el; }
 function addLink(parent, text, href) { const link=document.createElement('a'); link.href=href || '#'; link.textContent=text; parent.appendChild(link); return link; }
+function resolveAlbumFile(album, file) {
+ if(!file) return '';
+ if(file.startsWith('/') || file.includes('://')) return file;
+ if(album.dir) return album.dir.replace(/\/?$/, '/') + file;
+ return file;
+}
 function resolveAudio(album, track) {
  if(track.audio) return track.audio;
- if(track.file && album.audioDir) return album.audioDir.replace(/\/?$/, '/') + track.file;
+ if(track.file) return resolveAlbumFile(album, track.file);
  return '';
 }
 fetch('works.json').then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }).then(data => {
@@ -17,7 +23,8 @@ fetch('works.json').then(response => { if(!response.ok) throw new Error('works.j
   const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map(track => ({...track,audio:resolveAudio(album,track)}));
   const box=document.createElement('section'); box.className='frame-box'; addText(box,'h2',album.title || '未命名專輯');
   const info=document.createElement('div'); info.className='album-info';
-  if(album.cover) { const image=document.createElement('img'); image.className='album-cover'; image.src=album.cover; image.alt=(album.title || '專輯')+'封面'; info.appendChild(image); }
+  const coverSrc=resolveAlbumFile(album,album.cover);
+  if(coverSrc) { const image=document.createElement('img'); image.className='album-cover'; image.src=coverSrc; image.alt=(album.title || '專輯')+'封面'; info.appendChild(image); }
   const description=document.createElement('div'); description.className='album-description';
   if(album.description) addText(description,'p',album.description);
   (album.details || []).forEach(detail => addText(description,'p',detail,'small'));
