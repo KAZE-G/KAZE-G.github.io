@@ -13,24 +13,24 @@
 
 ## works.json 格式
 
-每張專輯只設定一次 audioDir；曲目用 file 寫檔名即可：
+每張專輯只設定一次 dir；封面和曲目可以只寫檔名：
 
     {
       "albums": [
         {
           "title": "專輯名稱",
-          "cover": "/WORKS/EP01/cover.jpg",
-          "audioDir": "/WORKS/EP01/",
+          "dir": "/WORKS/EP01/",
+          "cover": "cover.jpg",
           "tracks": [
             {
               "title": "曲目名稱",
               "duration": "3:00",
               "file": "track.mp3",
-              "lyrics": "/WORKS/EP01/lyrics/track.txt"
+              "lyrics": "lyrics/track.txt"
             }
           ]
         }
       ]
     }
 
-cover 和每首曲目的 file 都必須對應到 repository 中實際存在的檔案。點擊曲名會在左側播放器播放該曲；上一首、下一首會在目前播放清單內循環。
+相對檔名會接在 dir 後面；也可以在 cover、file 或 lyrics 填完整網站路徑。每個路徑都必須對應到 repository 中實際存在的檔案。點擊曲名會在左側播放器播放該曲；上一首、下一首會在目前播放清單內循環。
