@@ -11,6 +11,14 @@
 - 音樂檔和封面放在 WORKS/<專輯資料夾>/；歌詞使用實際存在的文字檔。
 - 不要填入不存在的音訊、歌詞或封面路徑。
 
+## 全站音樂資料夾
+
+site-config.json 的 worksDir 設定共同資料夾：
+
+    {
+      "worksDir": "/WORKS/"
+    }
+
 ## works.json 格式
 
 每張專輯只設定一次 dir；封面和曲目可以只寫檔名：
@@ -19,7 +27,7 @@
       "albums": [
         {
           "title": "專輯名稱",
-          "dir": "/WORKS/EP01/",
+          "dir": "EP01",
           "cover": "cover.jpg",
           "tracks": [
             {
@@ -33,4 +41,4 @@
       ]
     }
 
-相對檔名會接在 dir 後面；也可以在 cover、file 或 lyrics 填完整網站路徑。每個路徑都必須對應到 repository 中實際存在的檔案。點擊曲名會在左側播放器播放該曲；上一首、下一首會在目前播放清單內循環。
+相對檔名會接在全站 worksDir 和專輯 dir 後面；也可以在 cover、file 或 lyrics 填完整網站路徑。每個路徑都必須對應到 repository 中實際存在的檔案。點擊曲名會在左側播放器播放該曲；上一首、下一首會在目前播放清單內循環。
