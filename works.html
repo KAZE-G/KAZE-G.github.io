@@ -20,7 +20,7 @@ fetch('works.json').then(response => { if(!response.ok) throw new Error('works.j
  const albums=Array.isArray(data) ? data : (data.albums || []); root.replaceChildren();
  if(!albums.length) { addText(root,'p','作品資料尚未填入。'); return; }
  albums.forEach(album => {
-  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map(track => ({...track,audio:resolveAudio(album,track)}));
+  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map(track => ({...track,audio:resolveAudio(album,track),lyrics:resolveAlbumFile(album,track.lyrics)}));
   const box=document.createElement('section'); box.className='frame-box'; addText(box,'h2',album.title || '未命名專輯');
   const info=document.createElement('div'); info.className='album-info';
   const coverSrc=resolveAlbumFile(album,album.cover);
