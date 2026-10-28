@@ -21,12 +21,17 @@ let playlist = [], currentIndex = -1;
 const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
+function resolveAudio(album, track) {
+  if (track.audio) return track.audio;
+  if (track.file && album.audioDir) return album.audioDir.replace(/\/?$/, '/') + track.file;
+  return '';
+}
 async function loadPlaylist() {
   try {
     const response = await fetch('works.json');
     if (!response.ok) throw new Error('works.json unavailable');
     const data = await response.json();
-    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map(track => ({...track, albumTitle: album.title || ''}))).filter(track => track.audio);
+    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map(track => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || ''}))).filter(track => track.audio);
   } catch (error) { status.textContent = '目前沒有可播放的曲目資料。'; }
 }
 function playTrack(src, trackTitle, albumTracks) {
