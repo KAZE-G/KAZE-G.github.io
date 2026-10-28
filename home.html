@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>首頁｜やままち</title><link rel="stylesheet" href="site.css"></head>
+<body>
+<div class="frame-box"><h1>やままち 〜薫風霧雨と火山の街〜</h1><p>山街から吹く風。</p><p>吾輩は猫である。名前はまだない。</p><p>這裡是作品、音樂與個人活動的網站。</p></div>
+<div class="frame-box"><h2>更新記錄</h2><ul id="updates-list"><li>目前沒有更新記錄。</li></ul></div>
+<script>
+fetch('updates.json').then(response => { if (!response.ok) throw new Error('updates unavailable'); return response.json(); }).then(items => {
+ const list = document.getElementById('updates-list'); list.replaceChildren();
+ if (!Array.isArray(items) || !items.length) { const li=document.createElement('li'); li.textContent='目前沒有更新記錄。'; list.appendChild(li); return; }
+ items.forEach(item => { const li=document.createElement('li'); li.textContent=(item.date ? item.date + ' — ' : '') + (item.text || ''); list.appendChild(li); });
+}).catch(() => {});
+</script></body></html>

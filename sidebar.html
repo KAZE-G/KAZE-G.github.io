@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>導覽｜やままち</title><link rel="stylesheet" href="site.css"></head>
+<body>
+<div class="frame-box">
+<h2>やままち</h2>
+<p><a href="home.html" target="content">首頁</a></p>
+<p><a href="works.html" target="content">作品／專輯</a></p>
+<p><a href="order.html" target="content">訂購／價目表</a></p>
+<p><a href="about.html" target="content">關於</a></p>
+<p><a href="contact.html" target="content">聯絡</a></p>
+<p class="small"><a href="dialect.html" target="content">方言辨識（舊頁面）</a></p>
+<p>通り過ぎし旅人の数は：<br><img src="https://visitor-badge.laobi.icu/badge?page_id=yamamachi.home" alt="訪客計數器"></p>
+</div>
+<div class="frame-box">
+<h3>音樂播放器</h3><div id="player-title">尚未播放</div>
+<audio id="audio-player" controls preload="none" style="width:100%; margin-top:6px;"></audio>
+<p><button type="button" onclick="previousTrack()">上一首</button> <button type="button" onclick="nextTrack()">下一首</button></p>
+<div class="small" id="player-status">選擇作品頁的曲名即可播放。</div>
+</div>
+<script>
+let playlist = [], currentIndex = -1;
+const audio = document.getElementById('audio-player');
+const title = document.getElementById('player-title');
+const status = document.getElementById('player-status');
+async function loadPlaylist() {
+  try {
+    const response = await fetch('works.json');
+    if (!response.ok) throw new Error('works.json unavailable');
+    const data = await response.json();
+    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map(track => ({...track, albumTitle: album.title || ''}))).filter(track => track.audio);
+  } catch (error) { status.textContent = '目前沒有可播放的曲目資料。'; }
+}
+function playTrack(src, trackTitle, albumTracks) {
+  if (!src) { status.textContent = '這首曲目尚未提供音訊檔。'; return; }
+  const chosen = Array.isArray(albumTracks) ? albumTracks.filter(track => track.audio) : [];
+  playlist = chosen.length ? chosen : playlist;
+  currentIndex = playlist.findIndex(track => track.audio === src);
+  title.textContent = trackTitle || '正在播放';
+  audio.src = src; status.textContent = '';
+  audio.play().catch(() => { status.textContent = '請按播放器的播放鍵開始播放。'; });
+}
+function moveTrack(direction) {
+  if (!playlist.length) return;
+  if (currentIndex < 0) currentIndex = direction > 0 ? 0 : playlist.length - 1;
+  else currentIndex = (currentIndex + direction + playlist.length) % playlist.length;
+  const track = playlist[currentIndex]; playTrack(track.audio, track.title, playlist);
+}
+function previousTrack() { moveTrack(-1); }
+function nextTrack() { moveTrack(1); }
+audio.addEventListener('ended', nextTrack);
+loadPlaylist();
+</script></body></html>
