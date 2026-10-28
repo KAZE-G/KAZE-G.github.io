@@ -3,11 +3,11 @@
 <body>
 <div class="frame-box">
 <h2>やままち</h2>
-<p><a href="home.html" target="content">首頁</a></p>
-<p><a href="works.html" target="content">作品／專輯</a></p>
-<p><a href="order.html" target="content">訂購／價目表</a></p>
-<p><a href="about.html" target="content">關於</a></p>
-<p><a href="contact.html" target="content">聯絡</a></p>
+<p><a href="home.html" target="content">Home</a></p>
+<p><a href="works.html" target="content">Works / Albums</a></p>
+<p><a href="order.html" target="content">Order / Prices</a></p>
+<p><a href="about.html" target="content">About</a></p>
+<p><a href="contact.html" target="content">Contact</a></p>
 <p>通り過ぎし旅人の数は：<br><img src="https://visitor-badge.laobi.icu/badge?page_id=yamamachi.home" alt="訪客計數器"></p>
 </div>
 <div class="frame-box">
@@ -60,7 +60,7 @@ function playTrack(src, trackTitle, albumTracks) {
   playlist = chosen.length ? chosen : playlist;
   currentIndex = playlist.findIndex(track => track.audio === src);
   const track = currentIndex >= 0 ? playlist[currentIndex] : {};
-  title.textContent = [track.albumTitle, track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ');
+  title.textContent = [track.albumTitle, [track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ')].filter(Boolean).join('\n');
   audio.src = src; status.textContent = '';
   audio.play().catch(() => { status.textContent = '請按播放器的播放鍵開始播放。'; });
 }
