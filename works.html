@@ -3,20 +3,27 @@
 <body><h1>作品／專輯</h1><div id="works-list"><p>讀取作品資料中……</p></div>
 <script>
 const root = document.getElementById('works-list');
+let siteConfig = {};
 function addText(parent, tag, text, className) { const el=document.createElement(tag); el.textContent=text || ''; if(className) el.className=className; parent.appendChild(el); return el; }
 function addLink(parent, text, href) { const link=document.createElement('a'); link.href=href || '#'; link.textContent=text; parent.appendChild(link); return link; }
 function resolveAlbumFile(album, file) {
  if(!file) return '';
  if(file.startsWith('/') || file.includes('://')) return file;
- if(album.dir) return album.dir.replace(/\/?$/, '/') + file;
- return file;
+ const rootPath=(siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
+ const folder=(album.dir || '').replace(/^\/+|\/+$/g, '');
+ const base=(album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath,folder].filter(Boolean).join('/');
+ return base + '/' + file;
 }
 function resolveAudio(album, track) {
  if(track.audio) return track.audio;
  if(track.file) return resolveAlbumFile(album, track.file);
  return '';
 }
-fetch('works.json').then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }).then(data => {
+Promise.all([
+ fetch('works.json').then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }),
+ fetch('site-config.json').then(response => response.ok ? response.json() : {}).catch(() => ({}))
+]).then(([data,config]) => {
+ siteConfig=config || {};
  const albums=Array.isArray(data) ? data : (data.albums || []); root.replaceChildren();
  if(!albums.length) { addText(root,'p','作品資料尚未填入。'); return; }
  albums.forEach(album => {
