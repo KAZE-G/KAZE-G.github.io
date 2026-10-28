@@ -35,7 +35,7 @@ Promise.all([
  const albums=Array.isArray(data) ? data : (data.albums || []); root.replaceChildren();
  if(!albums.length) { addText(root,'p','作品資料尚未填入。'); return; }
  albums.forEach(album => {
-  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map(track => ({...track,audio:resolveAudio(album,track),lyrics:resolveAlbumFile(album,track.lyrics)}));
+  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map((track,index) => ({...track,audio:resolveAudio(album,track),lyrics:resolveAlbumFile(album,track.lyrics),albumTitle:album.title || '',trackNumber:String(index+1).padStart(2,'0')}));
   const box=document.createElement('section'); box.className='frame-box'; addText(box,'h2',album.title || '未命名專輯');
   const info=document.createElement('div'); info.className='album-info';
   const coverSrc=resolveAlbumFile(album,album.cover);
@@ -47,20 +47,21 @@ Promise.all([
   if(album.format) addText(description,'p','規格：'+album.format,'small');
   if(album.price) addText(description,'p','價格：'+album.price,'small');
   info.appendChild(description); box.appendChild(info);
-  tracks.forEach((track,index) => {
-   const line=document.createElement('div'); line.className='track-line';
-   const titleLink=document.createElement('a'); titleLink.href=track.audio || track.lyrics || '#'; titleLink.textContent=(index+1)+'. '+(track.title || '未命名曲目');
+  const listWrap=document.createElement('div'); listWrap.className='track-list-wrap';
+  const list=document.createElement('div'); list.className='track-list';
+  tracks.forEach(track => {
+   const index=document.createElement('span'); index.className='track-index'; index.textContent=track.trackNumber+'.'; list.appendChild(index);
+   const titleLink=document.createElement('a'); titleLink.className='track-name'; titleLink.href=track.audio || track.lyrics || '#'; titleLink.textContent=track.title || '未命名曲目';
    titleLink.addEventListener('click',event => {
     if(track.audio) { event.preventDefault(); try { parent.frames['sidebar'].playTrack(track.audio,track.title,tracks); } catch(error) { window.open(track.audio,'_blank'); } }
     else event.preventDefault();
    });
-   line.appendChild(titleLink);
-   if(track.duration) line.appendChild(document.createTextNode(' '+track.duration+' '));
-   if(track.lyrics) { addLink(line,'.txt',track.lyrics); if(track.audio) line.appendChild(document.createTextNode(' ')); }
-   if(track.audio) addLink(line,'.mp3',track.audio);
-   box.appendChild(line);
+   list.appendChild(titleLink);
+   const duration=document.createElement('span'); duration.className='track-duration'; duration.textContent=track.duration || ''; list.appendChild(duration);
+   if(track.lyrics) addLink(list,'.txt',track.lyrics); else { const empty=document.createElement('span'); list.appendChild(empty); }
+   if(track.audio) addLink(list,'.mp3',track.audio); else { const empty=document.createElement('span'); list.appendChild(empty); }
   });
-  root.appendChild(box);
+  listWrap.appendChild(list); box.appendChild(listWrap); root.appendChild(box);
  });
 }).catch(() => { root.textContent='無法讀取 works.json，請確認作品資料檔存在。'; });
 </script></body></html>
