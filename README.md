@@ -10,13 +10,15 @@
 - 專輯資料放在 works.json；首頁更新記錄放在 updates.json。
 - 音樂檔和封面放在 WORKS/<專輯資料夾>/；歌詞使用實際存在的文字檔。
 - 不要填入不存在的音訊、歌詞或封面路徑。
+- 更換既有素材後若瀏覽器仍載入舊版本，更新 site-config.json 的 assetVersion。
 
 ## 全站音樂資料夾
 
-site-config.json 的 worksDir 設定共同資料夾：
+site-config.json 設定共用路徑和素材版本：
 
     {
-      "worksDir": "/WORKS/"
+      "worksDir": "/WORKS/",
+      "assetVersion": "20261028-1"
     }
 
 ## works.json 格式
