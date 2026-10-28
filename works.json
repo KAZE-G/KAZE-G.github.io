@@ -2,8 +2,8 @@
   "albums": [
     {
       "title": "山街から吹く風",
-      "cover": "/ALBUM/EP01/EP_01.jpg",
-      "audioDir": "/ALBUM/EP01/",
+      "cover": "/WORKS/EP01/EP_01.jpg",
+      "audioDir": "/WORKS/EP01/",
       "tracks": [
         { "title": "気づいてたよ", "duration": "2:14", "file": "_01_気づいてたよ.mp3" },
         { "title": "にわいろ", "duration": "1:49", "file": "_02_にわいろ.mp3" },
