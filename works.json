@@ -6,15 +6,15 @@
       "dir": "EP01",
       "releaseDate": "2026年10月25日",
       "tracks": [
-        { "title": "気づいてたよ", "duration": "02\"14'", "file": "_01_気づいてたよ.mp3" },
-        { "title": "にわいろ", "duration": "01\"49'", "file": "_02_にわいろ.mp3" },
-        { "title": "海女の夢", "duration": "02\"01'", "file": "_03_海女の夢.mp3" },
-        { "title": "潮騒の市", "duration": "03\"37'", "file": "_04_潮騒の市.mp3" },
-        { "title": "雨が囁き", "duration": "02\"23'", "file": "_05_雨が囁き.mp3" },
-        { "title": "戦に涙", "duration": "02\"47'", "file": "_06_戦に涙.mp3" },
-        { "title": "出会うは火吹きの山", "duration": "01\"30'", "file": "_07_出会うは火吹きの山.mp3" },
-        { "title": "数字数え", "duration": "01\"19'", "file": "_08_数字数え.mp3" },
-        { "title": "㌁", "duration": "00\"27'", "file": "_09_.mp3" }
+        { "title": "気づいてたよ",       "duration": "02\"14'", "lyrics": "EP01_01.txt", "file": "_01_気づいてたよ.mp3" },
+        { "title": "にわいろ",           "duration": "01\"49'", "lyrics": "EP01_02.txt", "file": "_02_にわいろ.mp3" },
+        { "title": "海女の夢",           "duration": "02\"01'", "lyrics": "EP01_03.txt", "file": "_03_海女の夢.mp3" },
+        { "title": "潮騒の市",           "duration": "03\"37'", "lyrics": "EP01_04.txt", "file": "_04_潮騒の市.mp3" },
+        { "title": "雨が囁き",           "duration": "02\"23'", "lyrics": "EP01_05.txt", "file": "_05_雨が囁き.mp3" },
+        { "title": "戦に涙",             "duration": "02\"47'", "lyrics": "EP01_06.txt", "file": "_06_戦に涙.mp3" },
+        { "title": "出会うは火吹きの山",  "duration": "01\"30'", "lyrics": "EP01_07.txt", "file": "_07_出会うは火吹きの山.mp3" },
+        { "title": "数字数え",           "duration": "01\"19'", "lyrics": "EP01_08.txt", "file": "_08_数字数え.mp3" },
+        { "title": "㌁",                 "duration": "00\"27'", "file": "_09_.mp3" }
       ]
     }
   ]
