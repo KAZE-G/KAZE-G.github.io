@@ -51,7 +51,7 @@ async function loadPlaylist() {
     if (!response.ok) throw new Error('works.json unavailable');
     const data = await response.json();
     siteConfig = configResponse && configResponse.ok ? await configResponse.json() : {};
-    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map(track => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || ''}))).filter(track => track.audio);
+    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map((track,index) => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || '', trackNumber: String(index+1).padStart(2,'0')}))).filter(track => track.audio);
   } catch (error) { status.textContent = '目前沒有可播放的曲目資料。'; }
 }
 function playTrack(src, trackTitle, albumTracks) {
@@ -59,7 +59,7 @@ function playTrack(src, trackTitle, albumTracks) {
   const chosen = Array.isArray(albumTracks) ? albumTracks.filter(track => track.audio) : [];
   playlist = chosen.length ? chosen : playlist;
   currentIndex = playlist.findIndex(track => track.audio === src);
-  title.textContent = trackTitle || '正在播放';
+  const track = currentIndex >= 0 ? playlist[currentIndex] : {};\n  title.textContent = [track.albumTitle, track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ');
   audio.src = src; status.textContent = '';
   audio.play().catch(() => { status.textContent = '請按播放器的播放鍵開始播放。'; });
 }
