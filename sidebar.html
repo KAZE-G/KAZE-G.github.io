@@ -17,15 +17,17 @@
 <div class="small" id="player-status">選擇作品頁的曲名即可播放。</div>
 </div>
 <script>
-let playlist = [], currentIndex = -1;
+let playlist = [], currentIndex = -1, siteConfig = {};
 const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
 function resolveAlbumFile(album, file) {
   if (!file) return '';
   if (file.startsWith('/') || file.includes('://')) return file;
-  if (album.dir) return album.dir.replace(/\/?$/, '/') + file;
-  return file;
+  const rootPath = (siteConfig.worksDir || '/WORKS/').replace(/\/+$/, '');
+  const folder = (album.dir || '').replace(/^\/+|\/+$/g, '');
+  const base = (album.dir || '').startsWith('/') ? (album.dir || '').replace(/\/+$/, '') : [rootPath, folder].filter(Boolean).join('/');
+  return base + '/' + file;
 }
 function resolveAudio(album, track) {
   if (track.audio) return track.audio;
@@ -34,9 +36,13 @@ function resolveAudio(album, track) {
 }
 async function loadPlaylist() {
   try {
-    const response = await fetch('works.json');
+    const [response, configResponse] = await Promise.all([
+      fetch('works.json'),
+      fetch('site-config.json').catch(() => null)
+    ]);
     if (!response.ok) throw new Error('works.json unavailable');
     const data = await response.json();
+    siteConfig = configResponse && configResponse.ok ? await configResponse.json() : {};
     playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map(track => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || ''}))).filter(track => track.audio);
   } catch (error) { status.textContent = '目前沒有可播放的曲目資料。'; }
 }
