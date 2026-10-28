@@ -1,3 +1,12 @@
 {
-  "albums": []
+  "albums": [{
+    "title": "山街から吹く風",
+    "cover": "/ALBUM/EP01/ep_01.jpg",
+    "tracks": [{
+      "title": "気づいてたよ",
+      "duration": "2:14",
+      "lyrics": "/ALBUM/EP01/",
+      "audio": "/ALBUM/EP01/_01_気づいてたよ.mp3"
+    }]
+  }]
 }
