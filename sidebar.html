@@ -21,9 +21,15 @@ let playlist = [], currentIndex = -1;
 const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
+function resolveAlbumFile(album, file) {
+  if (!file) return '';
+  if (file.startsWith('/') || file.includes('://')) return file;
+  if (album.dir) return album.dir.replace(/\/?$/, '/') + file;
+  return file;
+}
 function resolveAudio(album, track) {
   if (track.audio) return track.audio;
-  if (track.file && album.audioDir) return album.audioDir.replace(/\/?$/, '/') + track.file;
+  if (track.file) return resolveAlbumFile(album, track.file);
   return '';
 }
 async function loadPlaylist() {
