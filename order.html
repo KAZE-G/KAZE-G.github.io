@@ -1,6 +1,27 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>訂購／價目表｜やままち</title><link rel="stylesheet" href="site.css"></head>
-<body><h1>訂購／價目表</h1><section class="frame-box"><h2>作品與價格</h2><p id="order-status">讀取訂購資訊中……</p><div id="price-list"></div></section>
+<html lang="zh-Hant">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>訂購／價目表｜やままち</title>
+  <link rel="stylesheet" href="site.css"></head>
+<body>
+ <h1>訂購／價目表</h1>
+ <section class="frame-box">
+  <h2>作品與價格</h2>
+  <p>作編詞曲 lyric.melody.arrange</p>
+  <p>調教.VSQx/UTAU抓譜 VOCALOID</p>
+  <p>吉他換弦.樂器維修</p>
+  <p>8051等單晶片程式及電路設計</p>
+  <p>應用程式設計</p>
+  <p>tube circuit design</p>
+  <p>攝影</p>
+  <p>黑白暗房放像引伸.黑白正片.雙浴 monochrome darkroom. monochrome positive film develop</p>
+  <p>簡易鏡片清理</p>
+  <p>西式.日式料理</p>
+  <p>整理中</p>
+  <p id="order-status">讀取訂購資訊中……</p>
+  <div id="price-list"></div></section>
 <script>
 Promise.all([fetch('site-config.json').then(r=>r.json()),fetch('works.json').then(r=>r.json())]).then(([config,data])=>{
  const albums=Array.isArray(data) ? data : (data.albums || []);
