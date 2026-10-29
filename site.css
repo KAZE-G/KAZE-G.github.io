@@ -2,6 +2,10 @@ html { min-height: 100%; background: #8C7B6B; }
 body { margin: 8px; background: #8C7B6B; color: #352B1B; font-family: "Times New Roman", "MS Mincho", "PMingLiU", serif; font-size: 16px; }
 a:link { color: #0000ee; } a:visited { color: #551a8b; } a:hover { color: #cc3300; } a:active { color: #ff0000; }
 h1, h2, h3 { font-weight: bold; }
+p {
+  margin: 0;
+  line-height: 1.2;
+}
 .frame-box { border: 2px ridge #352B1B; margin: 0 0 14px; padding: 10px; background: transparent; }
 .album-cover { display: block; width: 150px; height: 150px; object-fit: contain; object-position: top left; border: 1px solid #352B1B; border-radius: 0; }
 .album-info { display: flex; align-items: flex-start; gap: 12px; }
