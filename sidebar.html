@@ -13,6 +13,7 @@
 <div class="frame-box">
 <h3>音樂播放器</h3><div id="player-title">尚未播放</div>
 <audio id="audio-player" controls preload="none" style="width:100%; margin-top:6px;"></audio>
+<div id="player-like"></div>
 <p><button type="button" onclick="previousTrack()">上一首</button> <button type="button" onclick="nextTrack()">下一首</button></p>
 <div class="small" id="player-status">選擇作品頁的曲名即可播放。</div>
 </div>
@@ -21,6 +22,37 @@ let playlist = [], currentIndex = -1, siteConfig = {};
 const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
+const playerLike = document.getElementById('player-like');
+const LIKE_API = 'https://abacus.jasoncameron.dev';
+const LIKE_NAMESPACE = 'yamamachi.com';
+function likeUrl(action,key) { return LIKE_API+'/'+action+'/'+encodeURIComponent(LIKE_NAMESPACE)+'/'+encodeURIComponent(key); }
+async function readLikeCount(key) {
+ const response=await fetch(likeUrl('get',key),{cache:'no-store'});
+ if(response.status===404) return 0;
+ if(!response.ok) throw new Error('Like counter unavailable');
+ const data=await response.json(); return Number(data.value)||0;
+}
+async function incrementLike(key) {
+ const response=await fetch(likeUrl('hit',key),{cache:'no-store'});
+ if(!response.ok) throw new Error('Like counter unavailable');
+ const data=await response.json(); return Number(data.value)||0;
+}
+function createPlayerLikeButton(key) {
+ const button=document.createElement('button'); button.type='button'; button.className='like-button'; button.textContent='♡ …';
+ readLikeCount(key).then(count=>button.textContent='♡ '+count).catch(()=>button.textContent='♡ —');
+ button.addEventListener('click',async()=>{
+  if(button.disabled) return; button.disabled=true;
+  try { button.textContent='♡ '+await incrementLike(key); }
+  catch(error) { button.textContent='♡ !'; }
+  finally { button.disabled=false; }
+ });
+ return button;
+}
+function makeLikeKey(album,track,index) {
+ const albumId=album.id || album.title || 'untitled-album';
+ const trackId=track ? (track.id || track.title || ('track-'+(index+1))) : '';
+ return track ? 'track_'+albumId+'_'+trackId : 'album_'+albumId;
+}
 function addAssetVersion(path) {
   if (!siteConfig.assetVersion || /[?&]v=/.test(path)) return path;
   return path + (path.includes('?') ? '&' : '?') + 'v=' + encodeURIComponent(siteConfig.assetVersion);
@@ -51,7 +83,7 @@ async function loadPlaylist() {
     if (!response.ok) throw new Error('works.json unavailable');
     const data = await response.json();
     siteConfig = configResponse && configResponse.ok ? await configResponse.json() : {};
-    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map((track,index) => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || '', trackNumber: String(index+1).padStart(2,'0')}))).filter(track => track.audio);
+    playlist = (Array.isArray(data) ? data : (data.albums || [])).flatMap(album => (album.tracks || []).map((track,index) => ({...track, audio: resolveAudio(album, track), albumTitle: album.title || '', trackNumber: String(index+1).padStart(2,'0'), likeKey: makeLikeKey(album,track,index)}))).filter(track => track.audio);
   } catch (error) { status.textContent = '目前沒有可播放的曲目資料。'; }
 }
 function playTrack(src, trackTitle, albumTracks) {
@@ -67,7 +99,10 @@ function playTrack(src, trackTitle, albumTracks) {
   trackLine.textContent = [track.trackNumber ? track.trackNumber + '.' : '', trackTitle || track.title || '正在播放'].filter(Boolean).join(' ');
   if (albumLine.textContent) title.appendChild(albumLine);
   title.appendChild(trackLine);
+  playerLike.replaceChildren();
+  if (track.likeKey) playerLike.appendChild(createPlayerLikeButton(track.likeKey));
   audio.src = src; status.textContent = '';
+  if (!track.likeKey) { playerLike.replaceChildren(); }
   audio.play().catch(() => { status.textContent = '請按播放器的播放鍵開始播放。'; });
 }
 function moveTrack(direction) {
