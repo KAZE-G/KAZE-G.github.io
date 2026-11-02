@@ -27,6 +27,26 @@ function resolveAudio(album, track) {
  if(track.file) return resolveAlbumFile(album,track.file);
  return '';
 }
+function makeLikeButton(key) {
+ const button=document.createElement('button');
+ button.type='button'; button.className='like-button'; button.textContent='♡ …';
+ const api=parent.frames['sidebar'];
+ if(!api || typeof api.readLikeCount!=='function') { button.textContent='♡ —'; button.disabled=true; return button; }
+ api.readLikeCount(key).then(count => { button.textContent='♡ '+count; }).catch(() => { button.textContent='♡ —'; });
+ button.addEventListener('click', async () => {
+  if(button.disabled) return;
+  button.disabled=true;
+  try { const count=await api.incrementLike(key); button.textContent='♡ '+count; }
+  catch(error) { button.textContent='♡ !'; }
+  finally { button.disabled=false; }
+ });
+ return button;
+}
+function makeLikeKey(album, track, index) {
+ const albumId=album.id || album.title || 'untitled-album';
+ const trackId=track ? (track.id || track.title || ('track-'+(index+1))) : '';
+ return track ? 'track_'+albumId+'_'+trackId : 'album_'+albumId;
+}
 Promise.all([
  fetch('works.json',{cache:'no-cache'}).then(response => { if(!response.ok) throw new Error('works.json unavailable'); return response.json(); }),
  fetch('site-config.json',{cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
@@ -35,8 +55,8 @@ Promise.all([
  const albums=Array.isArray(data) ? data : (data.albums || []); root.replaceChildren();
  if(!albums.length) { addText(root,'p','作品資料尚未填入。'); return; }
  albums.forEach(album => {
-  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map((track,index) => ({...track,audio:resolveAudio(album,track),lyrics:resolveAlbumFile(album,track.lyrics),albumTitle:album.title || '',trackNumber:String(index+1).padStart(2,'0')}));
-  const box=document.createElement('section'); box.className='frame-box'; addText(box,'h2',album.title || '未命名專輯');
+  const tracks=(Array.isArray(album.tracks) ? album.tracks : []).map((track,index) => ({...track,audio:resolveAudio(album,track),lyrics:resolveAlbumFile(album,track.lyrics),albumTitle:album.title || '',trackNumber:String(index+1).padStart(2,'0'),likeKey:makeLikeKey(album,track,index)}));
+  const box=document.createElement('section'); box.className='frame-box'; const albumHeading=addText(box,'h2',album.title || '未命名專輯'); albumHeading.appendChild(document.createTextNode(' ')); albumHeading.appendChild(makeLikeButton(makeLikeKey(album,null,0)));
   const info=document.createElement('div'); info.className='album-info';
   const coverSrc=resolveAlbumFile(album,album.cover);
   if(coverSrc) { const image=document.createElement('img'); image.className='album-cover'; image.src=coverSrc; image.alt=(album.title || '專輯')+'封面'; info.appendChild(image); }
@@ -63,6 +83,7 @@ Promise.all([
    const duration=document.createElement('td'); duration.className='track-duration'; duration.textContent=track.duration || ''; row.appendChild(duration);
    const lyricsCell=document.createElement('td'); if(track.lyrics) addLink(lyricsCell,'.txt',track.lyrics); row.appendChild(lyricsCell);
    const audioCell=document.createElement('td'); if(track.audio) addLink(audioCell,'.mp3',track.audio); row.appendChild(audioCell);
+   const likeCell=document.createElement('td'); likeCell.className='track-like-cell'; likeCell.appendChild(makeLikeButton(track.likeKey)); row.appendChild(likeCell);
    tbody.appendChild(row);
   });
   list.appendChild(tbody);
