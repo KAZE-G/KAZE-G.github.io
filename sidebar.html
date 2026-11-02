@@ -27,15 +27,17 @@ const LIKE_API = 'https://abacus.jasoncameron.dev';
 const LIKE_NAMESPACE = 'yamamachi.com';
 function likeUrl(action,key) { return LIKE_API+'/'+action+'/'+encodeURIComponent(LIKE_NAMESPACE)+'/'+encodeURIComponent(key); }
 async function readLikeCount(key) {
- const response=await fetch(likeUrl('get',key),{cache:'no-store'});
+ const response=await fetch(likeUrl('get',key),{mode:'cors',cache:'no-store'});
  if(response.status===404) return 0;
  if(!response.ok) throw new Error('Like counter unavailable');
  const data=await response.json(); return Number(data.value)||0;
 }
 async function incrementLike(key) {
- const response=await fetch(likeUrl('hit',key),{cache:'no-store'});
- if(!response.ok) throw new Error('Like counter unavailable');
- const data=await response.json(); return Number(data.value)||0;
+ const response=await fetch(likeUrl('hit',key),{mode:'cors',cache:'no-store'});
+ if(!response.ok) throw new Error('HTTP '+response.status+' '+(await response.text()).slice(0,120));
+ const data=await response.json();
+ if(typeof data.value!=='number') throw new Error('Unexpected API response: '+JSON.stringify(data).slice(0,120));
+ return data.value;
 }
 function createPlayerLikeButton(key) {
  const button=document.createElement('button'); button.type='button'; button.className='like-button'; button.textContent='♡ …';
@@ -43,7 +45,7 @@ function createPlayerLikeButton(key) {
  button.addEventListener('click',async()=>{
   if(button.disabled) return; button.disabled=true;
   try { button.textContent='♡ '+await incrementLike(key); }
-  catch(error) { button.textContent='♡ !'; }
+  catch(error) { button.textContent='♡ !'; button.title=error.message || String(error); console.error('Like counter error:',error); }
   finally { button.disabled=false; }
  });
  return button;
