@@ -37,7 +37,7 @@ function makeLikeButton(key) {
   if(button.disabled) return;
   button.disabled=true;
   try { const count=await api.incrementLike(key); button.textContent='♡ '+count; }
-  catch(error) { button.textContent='♡ !'; }
+  catch(error) { button.textContent='♡ !'; button.title=error.message || String(error); console.error('Like counter error:',error); }
   finally { button.disabled=false; }
  });
  return button;
