@@ -22,3 +22,8 @@ input, button, textarea, select { font: inherit; }
 textarea { max-width: 100%; }
 #player-title { overflow-wrap: anywhere; white-space: pre-line; }
 @media (max-width: 520px) { .album-info { flex-wrap: wrap; } .album-cover { width: 120px; height: 120px; } }
+
+.like-button { border: 0; padding: 0 2px; margin: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; white-space: nowrap; }
+.like-button:disabled { opacity: .65; cursor: default; }
+.track-like-cell { padding-left: .65em !important; }
+#player-like { margin-top: 2px; }
