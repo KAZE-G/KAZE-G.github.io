@@ -23,7 +23,7 @@ const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
 const playerLike = document.getElementById('player-like');
-const LIKE_API = 'https://abacus.jasoncameron.dev';
+const LIKE_API = 'https://abacus.jsn.cam';
 const LIKE_NAMESPACE = 'yamamachi.com';
 function likeUrl(action,key) { return LIKE_API+'/'+action+'/'+encodeURIComponent(LIKE_NAMESPACE)+'/'+encodeURIComponent(key); }
 async function readLikeCount(key) {
