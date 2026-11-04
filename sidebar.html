@@ -23,20 +23,24 @@ const audio = document.getElementById('audio-player');
 const title = document.getElementById('player-title');
 const status = document.getElementById('player-status');
 const playerLike = document.getElementById('player-like');
-const LIKE_API = 'https://abacus.jsn.cam';
+const LIKE_API = 'https://counterapi.com/api';
 const LIKE_NAMESPACE = 'yamamachi.com';
-function likeUrl(action,key) { return LIKE_API+'/'+action+'/'+encodeURIComponent(LIKE_NAMESPACE)+'/'+encodeURIComponent(key); }
+function likeUrl(key,readOnly=false) {
+ const safeKey=String(key).replace(/[^a-zA-Z0-9_-]/g,'_');
+ return LIKE_API+'/'+encodeURIComponent(LIKE_NAMESPACE)+'/vote/'+encodeURIComponent(safeKey)+(readOnly?'?readOnly=true':'');
+}
 async function readLikeCount(key) {
- const response=await fetch(likeUrl('get',key),{mode:'cors',cache:'no-store'});
- if(response.status===404) return 0;
- if(!response.ok) throw new Error('Like counter unavailable');
- const data=await response.json(); return Number(data.value)||0;
+ const response=await fetch(likeUrl(key,true),{cache:'no-store'});
+ if(!response.ok) throw new Error('CounterAPI HTTP '+response.status);
+ const data=await response.json();
+ if(typeof data.value!=='number') throw new Error('CounterAPI returned an invalid count');
+ return data.value;
 }
 async function incrementLike(key) {
- const response=await fetch(likeUrl('hit',key),{mode:'cors',cache:'no-store'});
- if(!response.ok) throw new Error('HTTP '+response.status+' '+(await response.text()).slice(0,120));
+ const response=await fetch(likeUrl(key),{cache:'no-store'});
+ if(!response.ok) throw new Error('CounterAPI HTTP '+response.status);
  const data=await response.json();
- if(typeof data.value!=='number') throw new Error('Unexpected API response: '+JSON.stringify(data).slice(0,120));
+ if(typeof data.value!=='number') throw new Error('CounterAPI returned an invalid count');
  return data.value;
 }
 function createPlayerLikeButton(key) {
